@@ -5,6 +5,9 @@ const path = require('path');
 const port = 3000;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
+//student model
 const Student = require('./models/student');
 
 
@@ -27,7 +30,35 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+//seting up multer file storage 
 
+const storage = multer.diskStorage({
+  destination: 'public/uploads/',
+  filename: function (req, file, cb) {
+    cb(null, 'myapp '+ Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  }
+}).single('filetoupload');
+
+function checkFileType(file, cb) {
+  const filetypes = /jpg|png|jpeg|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('ERROR : Images only !');
+  }
+}
+
+
+//////
 
 //route to index page
 app.get('/', (req, res) => {
@@ -38,11 +69,12 @@ app.get('/students/create', (req, res) => {
 res.render('students_create');
 });
 
-app.post('/students/create', (req, res) => {
-  const student = new Student({name:req.body.name,batch:req.body.batch})
-student.save()
-.then(results =>{res.redirect('/students');})
-.catch(err => {console.log(err)});
+app.post('/students/create',upload,(req, res) => {
+
+   const student = new Student({name:req.body.name,batch:req.body.batch,image:req.file.filename})
+ student.save()
+ .then(results =>{res.redirect('/students');})
+ .catch(err => {console.log(err)});
 
 });
 //get all studnet route

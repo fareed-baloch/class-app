@@ -16,6 +16,7 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>Batch</th>
+                            <th>image</th>
                             <th>Created-at</th>
                             <th>Updated-at</th>
                             <th>Delete</th>
@@ -27,6 +28,7 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>Batch</th>
+                            <th>image</th>
                             <th>Created-at</th>
                             <th>Updated-at</th>
                             <th>Delete</th>
@@ -40,6 +42,7 @@
                             <td class="sorting_1"><%= student._id %> </td>
                             <td><%= student.name %></td>
                             <td><%= student.batch %></td>
+                            <td><img src="/uploads/<%= student.image %>" alt="" srcset=""></td>
                             <td><%= student.createdAt %></td>
                             <td><%= student.updatedAt %></td>
                             <td><a class="btn btn-danger"  href="students/delete/<%= student._id %> ">Delete</a></td>

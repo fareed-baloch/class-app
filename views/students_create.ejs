@@ -4,11 +4,15 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-4 text-gray-800">Update Student page</h1>
-                    <form action="/students/create" method="post">
+                    <form action="/students/create" enctype="multipart/form-data"  method="post">
                         <label class="form-item" for="name">Name:</label>
                         <input class="form-control" type="text"  name="name">
                         <label class="form-item" for="batch">batch:</label>
                         <input type="text" class="form-control"  name="batch">
+                        <label class="form-item" for="batch">image:</label>
+                        <input type="file" class="form-control"  name="filetoupload">
+                    
+                       
                         <br>
                         <button type="submit" class="btn btn-primary">Create</button>
                     </form>

@@ -7,6 +7,7 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            <%- messages('errors', locals) %>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -42,7 +43,7 @@
                             <td class="sorting_1"><%= student._id %> </td>
                             <td><%= student.name %></td>
                             <td><%= student.batch %></td>
-                            <td><img src="/uploads/<%= student.image %>" alt="" srcset=""></td>
+                            <td><img src="/uploads/<%= student.image %>" width="50px" height="50px" alt="" srcset=""></td>
                             <td><%= student.createdAt %></td>
                             <td><%= student.updatedAt %></td>
                             <td><a class="btn btn-danger"  href="students/delete/<%= student._id %> ">Delete</a></td>

@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const session = require('express-session');
-
+const {check , validationResult} = require('express-validator');
 
 //student model
 const Student = require('./models/student');
@@ -55,7 +55,8 @@ function checkFileType(file, cb) {
   if (mimetype && extname) {
     return cb(null, true);
   } else {
-    cb('ERROR : Images only !');
+   // //req.flash('danger','Supported files types are /jpg|png|jpeg|gif/ ');
+    cb(null ,false);
   }
 }
 ////
@@ -75,6 +76,8 @@ app.use(function (req, res, next) {
 });
 
 
+///
+
 
 
 
@@ -90,15 +93,37 @@ app.get('/students/create', (req, res) => {
 res.render('students_create');
 });
 
-app.post('/students/create',upload,(req, res) => {
+app.post('/students/create',upload,[
+  check('name','Name is required.').exists().isLength({min:3}),
+  check('batch','Batch is required.').exists().isLength({min:3}),
+  check('filetoupload').custom((value, {req}) => {
+    if(req.file.mimetype === 'image/gif' || req.file.mimetype === 'image/jpeg' || req.file.mimetype === 'image/png'){
+        return 'image'; // return "non-falsy" value to indicate valid data"
+    }
+    else{
+        return false; // return "falsy" value to indicate invalid data
+    }
+})
+.withMessage('Please only submit Image files.'), // custom error message that will be send back if the file in not a pdf. 
 
-   const student = new Student({name:req.body.name,batch:req.body.batch,image:req.file.filename})
- student.save()
- .then(results =>{
-   req.flash('success','Student added');
-   res.redirect('/students');
-  })
- .catch(err => {console.log(err)});
+],(req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty())
+  {
+    //console.log(req.file.mimetype);
+    const alert = errors.array();
+  // return res.status(400).json({ errors: errors.array() });
+   res.render('students_create',{alert});
+  }else{
+    const student = new Student({name:req.body.name,batch:req.body.batch,image:req.file.filename})
+    student.save()
+    .then(results =>{
+      req.flash('success','Student added');
+      res.redirect('/students');
+     })
+    .catch(err => {console.log(err)});
+  }
+ 
 
 });
 //get all studnet route

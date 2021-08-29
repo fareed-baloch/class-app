@@ -12,6 +12,7 @@ const Student = require('./models/student');
 
 //routes
 const students = require('./routes/student');
+const users = require('./routes/users');
 
 
 //making a static folder for our app to allow a client to access the files
@@ -64,6 +65,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/students',students);
+app.use('/users',users);
 
 
 //starting app 

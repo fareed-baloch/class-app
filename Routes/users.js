@@ -7,6 +7,8 @@ const {
     check,
     validationResult
 } = require('express-validator');
+const passport = require('passport');
+const {ensureAuthenticated} = require('../config/auth');
 
 app.get('/', (req, res) => {
 
@@ -20,10 +22,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/create', (req, res) => {
-
-
     res.render('user_create')
-
 });
 
 
@@ -51,18 +50,14 @@ app.post('/create', [
     }),
     //matching passwords
     check('password2').custom((value,{req})=>{
-        // console.log(value)
-        // console.log(req.body.password)
         if (value !== req.body.password) {
             return Promise.reject('Password confirmation does not match password');
             }
             else{
+
                 return true;
             }
-    })
-    
-
-
+    })   
 
 ], (req, res) => {
 
@@ -90,15 +85,31 @@ app.post('/create', [
                         res.redirect('/users');
                     })
                     .catch(err =>console.log(err))
-
                 });
-            });
-           // res.send(newuser);
-            
+            });     
     }
-
-
 });
+
+
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+app.post('/login', (req, res, next) => {
+    
+    passport.authenticate('local', { 
+        successRedirect: '/',
+        failureRedirect: '/users/login',
+        failureFlash: true })(req, res,next)
+});
+
+app.get('/logout', (req, res) => {
+    req.logout();
+    req.flash('success','you are logged out');
+    res.redirect('/users/login');
+});
+
+
 
 
 

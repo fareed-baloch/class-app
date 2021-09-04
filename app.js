@@ -6,14 +6,16 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
-
 //student model
 const Student = require('./models/student');
 
 //routes
 const students = require('./routes/student');
 const users = require('./routes/users');
+const passport = require('passport');
 
+//passport config
+require('./config/passport')(passport);
 
 //making a static folder for our app to allow a client to access the files
 app.use(express.static(__dirname + '/public'));
@@ -42,6 +44,10 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 //express messages middleware
 app.use(require('connect-flash')());

@@ -16,6 +16,7 @@ passport.use(new LocalStrategy({usernameField: 'email'},
       bcrypt.compare(password, user.password).then(function(result) {
         if(result){
             return done(null, user);
+            
         }
         else{
             return done(null, false, { message: 'Incorrect password.' });
@@ -27,13 +28,18 @@ passport.use(new LocalStrategy({usernameField: 'email'},
 
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    done(null, user._id);
   });
   
   
-  passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
+  passport.deserializeUser(function(_id, done) {
+    User.findById(_id, function(err, user) {
+      if(err){
+        done(null,false ,{error :err});
+      }
+      else{
       done(err, user);
+      }
     });
   });
 

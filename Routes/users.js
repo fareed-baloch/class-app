@@ -9,8 +9,11 @@ const {
 } = require('express-validator');
 const passport = require('passport');
 const {ensureAuthenticated} = require('../config/auth');
+require('../config/passport')(passport);
 
-app.get('/', (req, res) => {
+app.get('/',ensureAuthenticated, (req, res,next) => {
+  
+   console.log(req.user.role);
 
     User.find()
     .then((results)=>{
@@ -21,8 +24,10 @@ app.get('/', (req, res) => {
 
 });
 
-app.get('/create', (req, res) => {
-    res.render('user_create')
+app.get('/create',(req, res) => {
+   // console.log("create :");
+  //  console.log(req.body);
+   res.render('user_create');
 });
 
 

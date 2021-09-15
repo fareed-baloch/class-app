@@ -31,21 +31,21 @@ db.once('open', function() {
 });
 
 // parse application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: false }))
-
+app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
-app.use(express.json())
+app.use(bodyParser.json())
 
-////
 
 //express session middleware
 app.use(session({
   secret: 'keyboard cat',
-  resave: true,
+  resave: false,
   saveUninitialized: true
 }));
 
+////
 //passport middleware
+
 app.use(passport.initialize());
 app.use(passport.session());
 
